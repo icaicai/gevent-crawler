@@ -3,7 +3,8 @@
 import urllib2
 from gevent import pool
 
-Request = urllib2.Request
+class Request(urllib2.Request):
+    pass
 
         
 class Response(object):
@@ -23,7 +24,10 @@ class Response(object):
 
         self._txt = self._resp.read()
         if type(self._txt) is str:
-            self._txt = self._txt.decode('gbk')
+            try:
+                self._txt = self._txt.decode('gbk')
+            except:
+                pass
         
         return self._txt
 
@@ -39,7 +43,7 @@ class Response(object):
 
 class Downloader(object):
     """docstring for Downloader"""
-    def __init__(self, thread, retry):
+    def __init__(self, thread, retry=3):
         super(Downloader, self).__init__()
 
         self._pool = pool.Pool(thread)

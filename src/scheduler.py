@@ -39,8 +39,9 @@ class Scheduler(object):
             configs = proj.configs
             if 'spiders' in configs:
                 for spider in configs['spiders']:
-                    job = Job(spider, proj)
-                    self._jobs.append(job)
+                    if 'sched' in spider:
+                        job = Job(spider, proj)
+                        self._jobs.append(job)
                     #if 'sched' in spider:
                     #    pass
 

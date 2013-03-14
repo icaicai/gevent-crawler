@@ -2,7 +2,7 @@
 
 import math
 from datetime import datetime, timedelta
-from crawler import Crawler
+
 
 
 MIN_VALUES = {'year': 1970, 'month': 1, 'day': 1, 'week': 1,
@@ -21,7 +21,11 @@ def convert2datetime(dateval, format=None):
     elif isinstance(dateval, basestring):
         if format is None:
             format = '%Y-%m-%d %H:%M:%S'
-        return datetime.strptime(dateval, format)
+        return datetime.strptime(dateval, format)        
+    elif isinstance(dateval, datetime):
+        return dateval
+    elif isinstance(dateval, date):
+        return datetime.fromordinal(dateval.toordinal())
 
     return None
 
@@ -35,21 +39,21 @@ class Job(object):
         self._spider = spider['name']
         self._spider_params = params = {}
 
-        if 'start_urls' in spider:
-            params['start_urls'] = spider['start_urls']
+        # if 'start_urls' in spider:
+        #     params['start_urls'] = spider['start_urls']
 
-        if 'allow_domain' in spider:
-            params['allow_domain'] = spider['allow_domain']
+        # if 'allow_domain' in spider:
+        #     params['allow_domain'] = spider['allow_domain']
 
-        if 'rules' in spider:
-            params['rules'] = spider['rules']
+        # if 'rules' in spider:
+        #     params['rules'] = spider['rules']
 
-        if 'proxy' in spider:
-            params['proxy'] = spider['proxy']
+        # if 'proxy' in spider:
+        #     params['proxy'] = spider['proxy']
 
-        self._crawler_configs = configs = {}
-        configs['thread'] = spider.get('thread', 4)
-        configs['headers'] = spider.get('headers')
+        # self._crawler_configs = configs = {}
+        # configs['thread'] = spider.get('thread', 4)
+        # configs['headers'] = spider.get('headers')
 
         self._init_sched(spider.get('sched'))
 
@@ -176,9 +180,11 @@ class Job(object):
             self._count += 1
 
         self._running = True
-        crawler = Crawler(self._crawler_configs)
+
+        crawler = self._project.get_crawler()
+        #crawler = Crawler(self._crawler_configs)
         #crawler.set_header(self._headers)
-        spider = self._project.load_spider(self._spider, self._spider_params)
+        spider = self._project.load_spider(self._spider)
         if spider:
             crawler.crawl(spider)
             crawler.add_callback(_on_finished)

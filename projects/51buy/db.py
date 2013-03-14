@@ -7,9 +7,9 @@ _c_goods = store.get_collection('51buy')
 
 
 def get_urls():
-	us = _c_goods.find(fields=['url'])
-	urls = [u['url'] for u in us]
-	return urls
+    us = _c_goods.find(fields=['url'])
+    urls = [u['url'] for u in us]
+    return urls
 
 
 def save_goods(data):
@@ -48,7 +48,7 @@ def save_goods(data):
         lp = dict(price=data['price'], begin=time.time(), end=time.time())
         prices.append(lp)
 
-    	g['delta'] = price - last_price['price']
+        g['delta'] = price - last_price['price']
     g['updated'] = time.time()
 
-    _c_goods.save(g)	
+    _c_goods.save(g)    

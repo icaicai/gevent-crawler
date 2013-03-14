@@ -1,20 +1,16 @@
 #coding=utf8
 
 
-from downloader import Downloader
-
 class Crawler(object):
 
-    def __init__(self, configs):
-        thread = configs.get('thread', 4)
-        retry = configs.get('retry', 3)
-        headers = configs.get('headers')
-        self._downloader = Downloader(thread, retry)
-        if headers:
-            self._downloader.add_headers(headers)
-
-        self._spiders = []
+    def __init__(self, proj):
+        self._proj = proj
+        self._downloader = proj.get_downloader()
+        self._running_spiders = []
         self._callbacks = []
+
+    def get_spider(self, name, params=None):
+        return self._proj.get_spider(name, params)
 
     def add_callback(self, func):
         self._callbacks.append(func)
@@ -27,13 +23,13 @@ class Crawler(object):
                 pass
 
     def finish(self, spider):
-        if spider in self._spiders:
-            self._spiders.remove(spider)
-            if not self._spiders:
+        if spider in self._running_spiders:
+            self._running_spiders.remove(spider)
+            if not self._running_spiders:
                 self._finished()
 
     def crawl(self, spider):
-        self._spiders.append(spider)
+        self._running_spiders.append(spider)
         spider.crawler = self
         requests = spider.start_requests()
         g = self._downloader.fetch(requests)

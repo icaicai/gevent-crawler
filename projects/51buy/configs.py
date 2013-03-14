@@ -3,8 +3,8 @@
 name = '51buy'
 
 configs = {
-    'thread': 4,   #最大并行线程数
-    'headers': {   #附加的HTTP头
+    'thread': 4,  #同时下载线程数
+    'headers': {  #附加的HTTP头
         'User-Agent': ''
     },
     'spiders': [{  #

@@ -44,7 +44,7 @@ class Spider(object):
     def make_request(self, url):
         req = Request(url)
         if self._proxy_config:
-            if 'creds' in self._proxy_config
+            if 'creds' in self._proxy_config:
                 req.add_header('Proxy-authorization', 'Basic ' + self._proxy_config['creds'])
             req.set_proxy(self._proxy_config['hostport'], self._proxy_config['proxy_type'] or req.get_type())
         return req
@@ -63,12 +63,12 @@ class Spider(object):
         self.crawler.finish(self)
 
     def parse(self, res):
-        '''解析抓取来的内容'''
+        """对抓取来的结果进行解析"""
         return []
 
 
     def filter(self, items):
-        '''过滤解析后，得到的数据'''
+        """对解析后的结果进行过滤"""
         return items
         #for rule in self.rules:
         #    items = filter(rule.valid, items)
@@ -87,6 +87,7 @@ class LinkSpider(Spider):
     """docstring for LinkSpider"""
 
     def parse(self, res):
+        """获取页面里的所有链接"""
         urls = set()
         doc = self.get_xmldoc(res.text)
         doc.make_links_absolute(doc.base_url or res.url)

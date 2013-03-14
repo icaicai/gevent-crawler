@@ -97,7 +97,7 @@ class Product(Spider):
         super(Product, self).pre_requests()
         if not self.start_urls:
             print '>> start url from db <<'
-            #self.start_urls = db.get_urls()
+            self.start_urls = db.get_urls()
 
     def parse(self, res):
         #urlManager.touch(res.url) #
